@@ -92,7 +92,6 @@
               "createOptions": {
                 "HostConfig":{
                   "Binds":["/dev/vchiq:/dev/vchiq"],
-                  "Privileged":true,
                   "Devices":[{"PathOnHost":"/dev/vchiq","PathInContainer":"/dev/vchiq","CgroupPermissions":"mrw"}]
                 }
               }

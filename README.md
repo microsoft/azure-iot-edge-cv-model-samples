@@ -1,53 +1,17 @@
----
-page_type: sample
-languages:
-- csharp
-products:
-- dotnet
-description: "Add 150 character max description"
-urlFragment: "update-this-to-unique-url-stub"
----
+# Bringing Computer Vision models to the Edge with Azure IoT Edge samples
 
-# Official Microsoft Sample
+## Overview
+This repository hosts the code samples for the [Bringing Computer Vision models to the Edge with Azure IoT Edge - A guide for developers and data scientists](https://github.com/lafius/azure-iot-edge-cv-model-on-raspberry-pi-samples/tree/master/Documentation/Bringing%20Computer%20Vision%20models%20to%20the%20Intelligent%20Edge%20with%20Azure%20IoT%20Edge%20-%20A%20guide%20for%20developers%20and%20data%20scientists.pdf).
 
-<!-- 
-Guidelines on README format: https://review.docs.microsoft.com/help/onboard/admin/samples/concepts/readme-template?branch=master
+The objective of this guide is to walk you through an end-to-end AI object detection on a Raspberry Pi 3 via a series of modules that are entirely customizable with ease. This guide is designed for developers as well as data scientists who wish to easily put their AI models in practice on edge devices without focusing too much on the deployment.
 
-Guidance on onboarding samples to docs.microsoft.com/samples: https://review.docs.microsoft.com/help/onboard/admin/samples/process/onboarding?branch=master
+<p align="center"><img width="80%" src="Documentation/overview.png" /></p>
 
-Taxonomies for products and languages: https://review.docs.microsoft.com/new-hope/information-architecture/metadata/taxonomies?branch=master
--->
-
-Give a short description for your sample here. What does it do and why is it important?
+From the training of the YOLOv3 object detection to the deployment on the Raspberry Pi 3, you will have a wide overview of how to build an IoT device performing computer vision models.
 
 ## Contents
-
-Outline the file contents of the repository. It helps users navigate the codebase, build configuration and any related assets.
-
-| File/folder       | Description                                |
-|-------------------|--------------------------------------------|
-| `src`             | Sample source code.                        |
-| `.gitignore`      | Define what to ignore at commit time.      |
-| `CHANGELOG.md`    | List of changes to the sample.             |
-| `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
-| `README.md`       | This README file.                          |
-| `LICENSE`         | The license for the sample.                |
-
-## Prerequisites
-
-Outline the required components and tools that a user might need to have on their machine in order to run the sample. This can be anything from frameworks, SDKs, OS versions or IDE releases.
-
-## Setup
-
-Explain how to prepare the sample once the user clones or downloads the repository. The section should outline every step necessary to install dependencies and set up any settings (for example, API keys and output folders).
-
-## Runnning the sample
-
-Outline step-by-step instructions to execute the sample and see its output. Include steps for executing the sample from the IDE, starting specific services in the Azure portal or anything related to the overall launch of the code.
-
-## Key concepts
-
-Provide users with more context on the tools and services used in the sample. Explain some of the code that is being used and how services interact with each other.
+* [Azure ML Training](https://github.com/lafius/azure-iot-edge-cv-model-on-raspberry-pi-samples/tree/master/Azure%20ML%20Training): contains a notebook to train the state-of-the-art object detection YOLOv3 based on this Keras implementation [repository](https://github.com/qqwweee/keras-yolo3) with Azure Machine Learning.
+* [IoT](https://github.com/lafius/azure-iot-edge-cv-model-on-raspberry-pi-samples/tree/master/IoT): contains the IoT solution presented in the guide as well as a notebook to quickly set up an Azure IoT Hub via az commands.
 
 ## Contributing
 

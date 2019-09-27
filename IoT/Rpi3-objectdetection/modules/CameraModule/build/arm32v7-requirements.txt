@@ -1,0 +1,4 @@
+azure-iothub-device-client~=1.4.3
+numpy
+requests
+picamera

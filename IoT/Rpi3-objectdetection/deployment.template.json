@@ -91,8 +91,8 @@
               "image": "${MODULES.CameraModule}",
               "createOptions": {
                 "HostConfig":{
-                  "Binds":["/dev/vchiq:/dev/vchiq"],
-                  "Devices":[{"PathOnHost":"/dev/vchiq","PathInContainer":"/dev/vchiq","CgroupPermissions":"mrw"}]
+                  "Binds":["/dev/vchiq:/dev/vchiq", "/dev/vcsm:/dev/vcsm"],
+                  "Devices":[{"PathOnHost":"/dev/vchiq","PathInContainer":"/dev/vchiq","CgroupPermissions":"mrw"},{"PathOnHost":"/dev/vcsm","PathInContainer":"/dev/vcsm","CgroupPermissions":"mrw"}]
                 }
               }
             },

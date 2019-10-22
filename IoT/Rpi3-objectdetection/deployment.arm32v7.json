@@ -53,7 +53,7 @@
             "restartPolicy": "always",
             "settings": {
               "image": "azuretest61d4bf48.azurecr.io/cameramodule:0.0.1-arm32v7",
-              "createOptions": "{\"HostConfig\":{\"Binds\":[\"/dev/vchiq:/dev/vchiq\"],\"Devices\":[{\"PathOnHost\":\"/dev/vchiq\",\"PathInContainer\":\"/dev/vchiq\",\"CgroupPermissions\":\"mrw\"}]}}"
+              "createOptions": "{\"HostConfig\":{\"Binds\":[\"/dev/vchiq:/dev/vchiq\", \"/dev/vcsm:/dev/vcsm\"],\"Devices\":[{\"PathOnHost\":\"/dev/vchiq\",\"PathInContainer\":\"/dev/vchiq\",\"CgroupPermissions\":\"mrw\"}, {\"PathOnHost\":\"/dev/vcsm\",\"PathInContainer\":\"/dev/vcsm\",\"CgroupPermissions\":\"mrw\"}]}}"
             },
             "env": {
               "IMAGE_PROCESSING_ENDPOINT": {

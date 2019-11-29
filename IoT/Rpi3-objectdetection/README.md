@@ -9,7 +9,7 @@ This is an IoT solution based on Azure IoT Edge that can perform object detectio
 * PiCamera (with the 'Camera' option enabled on your Rpi 3)
 
 ## Getting started
-Clone this repo, to test on your machine, you need to download a [YOLOv3 model](https://onnxzoo.blob.core.windows.net/models/opset_10/yolov3/yolov3.onnx), rename it 'model.onnx' and move it inside the (modules > ObjectDetection >) app/ folder.
+Clone this repo, to test on your machine, you need to download a [YOLOv3 model](https://azurecviotedge.blob.core.windows.net/mlops/model.onnx), move it inside the (modules > ObjectDetection >) app/ folder.
 If you use your own trained YOLOv3 model, you will also need to update the labels.txt file.
 
 ## (Quick) Building and deploying the solution

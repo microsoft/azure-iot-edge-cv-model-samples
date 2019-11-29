@@ -1,0 +1,45 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - MLOps/environment_setup/arm-templates/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+- group: devopsforai-aml-vg
+- group: iotedge-vg
+
+
+steps:
+- task: AzureResourceGroupDeployment@2
+  inputs:
+    azureSubscription: 'AzureResourceConnection'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: '$(BASE_NAME)-RG'
+    location: $(LOCATION)
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/MLOps/environment_setup/arm-templates/cloud-environment.json'
+    overrideParameters: '-baseName $(BASE_NAME) -location $(LOCATION)'
+    deploymentMode: 'Incremental'
+  displayName: 'Deploy MLOps resources to Azure'
+
+- task: AzureResourceGroupDeployment@2
+  displayName: 'Create Azure IoT Hub'
+  inputs:
+    azureSubscription: 'AzureResourceConnection'
+    resourceGroupName: '$(BASE_NAME)-RG'
+    location: $(LOCATION)
+    templateLocation: 'URL of the file'
+    csmFileLink: 'https://raw.githubusercontent.com/Azure-Samples/devops-iot-scripts/12d60bd513ead7c94aa1669e505083beaef8a480/arm-iothub.json'
+    overrideParameters: '-iotHubName $(IOTHUB_NAME) -iotHubSku "S1"'
+
+- task: AzureCLI@1
+  displayName: 'Azure CLI: Create IoT Edge device'
+  inputs:
+    azureSubscription: 'AzureResourceConnection'
+    scriptLocation: inlineScript
+    inlineScript: '(az extension add --name azure-cli-iot-ext && TMP_OUTPUT="$(az iot hub device-identity show-connection-string --device-id $EDGE_DEVICE_ID --hub-name $IOTHUB_NAME)" && RE="\"connectionString\":\s?\"(.*)\"" && if [[ $TMP_OUTPUT =~ $RE ]]; then CS_OUTPUT=${BASH_REMATCH[1]} && echo "Got device connection string"; fi && echo "##vso[task.setvariable variable=CS_OUTPUT]${CS_OUTPUT}" ) || (az iot hub device-identity create --hub-name $IOTHUB_NAME --device-id $EDGE_DEVICE_ID --edge-enabled --output none && echo "Created Edge device" && sleep 5 && az iot hub device-twin update --device-id $EDGE_DEVICE_ID  --hub-name $IOTHUB_NAME --set tags=''{"environment":"dev"}'' && echo "Set tag for device" && TMP_OUTPUT="$(az iot hub device-identity show-connection-string --device-id $EDGE_DEVICE_ID --hub-name $IOTHUB_NAME )" && RE="\"connectionString\":\s?\"(.*)\"" && if [[ $TMP_OUTPUT =~ $RE ]]; then CS_OUTPUT=${BASH_REMATCH[1]} && echo "Got device connection string: ${CS_OUTPUT}"; fi && echo "##vso[task.setvariable variable=CS_OUTPUT]${CS_OUTPUT}")'

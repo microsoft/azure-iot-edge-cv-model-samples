@@ -1,0 +1,37 @@
+pool: 
+  vmImage: 'ubuntu-latest'
+
+container: mcr.microsoft.com/mlops/python:latest
+
+
+variables:
+- group: devopsforai-aml-vg
+
+
+steps:
+- bash: |
+   # Invoke the Python building and publishing a training pipeline
+   python3 $(Build.SourcesDirectory)/MLOps/ml_service/pipelines/build_train_pipeline_for_yolo.py
+  failOnStderr: 'false'
+  env:
+    SP_APP_SECRET: '$(SP_APP_SECRET)'
+  displayName: 'Publish Azure Machine Learning Pipeline'
+  enabled: 'true'
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/MLOps'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    Contents: |
+      ml_service/pipelines/?(run_train_pipeline.py|*.json)
+
+
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    ArtifactName: 'mlops-pipelines'
+    publishLocation: 'container'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    TargetPath: '$(Build.ArtifactStagingDirectory)'  

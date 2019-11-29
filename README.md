@@ -1,9 +1,11 @@
-# Bringing Computer Vision models to the Edge with Azure IoT Edge samples
+# Bringing Computer Vision models to the Edge with Azure IoT Edge samples [UPDATED NOV 2019]
 
 ## Overview
 This repository hosts the code samples for the [Bringing Computer Vision models to the Edge with Azure IoT Edge - A guide for developers and data scientists](https://github.com/microsoft/azure-iot-edge-cv-model-samples/tree/master/Documentation/Bringing%20Computer%20Vision%20models%20to%20the%20Intelligent%20Edge%20with%20Azure%20IoT%20Edge%20-%20A%20guide%20for%20developers%20and%20data%20scientists.pdf).
 
 The objective of this guide is to walk you through an end-to-end AI object detection on a Raspberry Pi 3 via a series of modules that are entirely customizable with ease. This guide is designed for developers as well as data scientists who wish to easily put their AI models in practice on edge devices without focusing too much on the deployment.
+
+**[UPDATED NOV] This new version features a fully operational MLOps implementation of the above IoT solution. Check out MLOps/ as well as the associated section in the updated guide**
 
 <p align="center"><img width="80%" src="https://github.com/microsoft/azure-iot-edge-cv-model-samples/blob/master/Documentation/overview.png" /></p>
 
@@ -12,6 +14,7 @@ From the training of the YOLOv3 object detection to the deployment on the Raspbe
 ## Contents
 * [Azure ML Training](https://github.com/microsoft/azure-iot-edge-cv-model-samples/tree/master/Azure%20ML%20Training): contains a notebook to train the state-of-the-art object detection YOLOv3 based on this Keras implementation [repository](https://github.com/qqwweee/keras-yolo3) with Azure Machine Learning.
 * [IoT](https://github.com/microsoft/azure-iot-edge-cv-model-samples/tree/master/IoT): contains the IoT solution presented in the guide as well as a notebook to quickly set up an Azure IoT Hub via az commands.
+* [MLOps](https://github.com/microsoft/azure-iot-edge-cv-model-samples/tree/master/MLOps): contains an end-to-end MLOps implementation of the IoT solution above from the training of YOLOv3 on the VOC dataset to the deployment in a **dev-qa-prod** environment with Azure DevOps.
 
 ## Contributing
 

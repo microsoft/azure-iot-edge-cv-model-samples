@@ -1,0 +1,120 @@
+{
+  "$schema-template": "2.0.0",
+  "modulesContent": {
+    "$edgeAgent": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "runtime": {
+          "type": "docker",
+          "settings": {
+            "minDockerVersion": "v1.25",
+            "loggingOptions": "",
+            "registryCredentials": {
+              "azuretest61d4bf48": {
+                "username": "$ACR_USER",
+                "password": "$ACR_PASSWORD",
+                "address": "$ACR_ADDRESS"
+              }
+            }
+          }
+        },
+        "systemModules": {
+          "edgeAgent": {
+            "type": "docker",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+              "createOptions": {}
+            }
+          },
+          "edgeHub": {
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
+              "createOptions": {
+                "HostConfig": {
+                  "PortBindings": {
+                    "5671/tcp": [
+                      {
+                        "HostPort": "5671"
+                      }
+                    ],
+                    "8883/tcp": [
+                      {
+                        "HostPort": "8883"
+                      }
+                    ],
+                    "443/tcp": [
+                      {
+                        "HostPort": "443"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "env": {
+              "OptimizeForPerformance": {
+                "value": "false"
+              }
+            }
+          }
+        },
+        "modules": {
+          "object-detection": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.ObjectDetection}",
+              "createOptions": {
+                "HostConfig": {
+                  "PortBindings": {
+                    "8000/tcp": [
+                      {
+                        "HostPort": "8885"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "camera-module": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.CameraModule}",
+              "createOptions": {
+                "HostConfig":{
+                  "Binds":["/dev/vchiq:/dev/vchiq", "/dev/vcsm:/dev/vcsm"],
+                  "Devices":[{"PathOnHost":"/dev/vchiq","PathInContainer":"/dev/vchiq","CgroupPermissions":"mrw"},{"PathOnHost":"/dev/vcsm","PathInContainer":"/dev/vcsm","CgroupPermissions":"mrw"}]
+                }
+              }
+            },
+            "env": {
+              "IMAGE_PROCESSING_ENDPOINT": {
+                "value":"http://object-detection:8885/image"
+              }
+            }
+          }
+        }
+      }
+    },
+    "$edgeHub": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "routes": {
+          "CameraModuleToIoTHub": "FROM /messages/modules/camera-module/outputs/output1 INTO $upstream"
+        },
+        "storeAndForwardConfiguration": {
+          "timeToLiveSecs": 7200
+        }
+      }
+    }
+  }
+}

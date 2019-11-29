@@ -1,0 +1,71 @@
+pool:
+  name: Azure Pipelines
+  vmImage: 'ubuntu-latest'
+
+variables:
+- group: iotedge-vg
+- group: devopsforai-aml-vg
+
+steps:
+- task: UsePythonVersion@0
+  displayName: 'Use Python 3.x'
+
+- bash: |
+   python -m pip install python-dotenv
+   python -m pip install azureml-sdk
+  displayName: 'Bash Script'
+
+- task: PythonScript@0
+  displayName: 'Run a Python script'
+  inputs:
+    scriptPath: '$(Build.SourcesDirectory)/MLOps/ml_service/util/retrieve_model.py'
+    workingDirectory: '$(Build.SourcesDirectory)/MLOps/ml_service/util'
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.SourcesDirectory)/MLOps/Rpi3-objectdetection/modules/ObjectDetection/app'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/MLOps/ml_service/util'
+    Contents: |
+     yolo.onnx
+     
+    TargetFolder: '$(Build.SourcesDirectory)/MLOps/Rpi3-objectdetection/modules/ObjectDetection/app'
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.SourcesDirectory)/MLOps/Rpi3-objectdetection/modules/ObjectDetection/app'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/MLOps/ml_service/util/$(MODEL_DATA_PATH_DATASTORE)'
+    Contents: |
+     classes.txt
+     
+    TargetFolder: '$(Build.SourcesDirectory)/MLOps/Rpi3-objectdetection/modules/ObjectDetection/app'
+
+- task: AzureIoTEdge@2
+  displayName: 'Azure IoT Edge - Build module images'
+  inputs:
+    templateFilePath: '$(Build.SourcesDirectory)/MLOps/Rpi3-objectdetection/deployment.template.json'
+    defaultPlatform: arm32v7
+
+- task: AzureIoTEdge@2
+  displayName: 'Azure IoT Edge - Push module images'
+  inputs:
+    action: 'Push module images'
+    azureSubscriptionEndpoint: AzureResourceConnection
+    azureContainerRegistry: '{"loginServer":"$(ACR_ADDRESS)", "id" : "/subscriptions/$(SUBSCRIPTION_ID)/resourceGroups/$(BASE_NAME)-AML-RG/providers/Microsoft.ContainerRegistry/registries/$(ACR_USER)"}'
+    templateFilePath: '$(Build.SourcesDirectory)/MLOps/Rpi3-objectdetection/deployment.template.json'
+    defaultPlatform: arm32v7
+    fillRegistryCredential: false
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/MLOps/Rpi3-objectdetection'
+    Contents: |
+     deployment.template.json
+     **/module.json
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: iot'
+  inputs:
+    ArtifactName: iot
+

@@ -71,7 +71,7 @@ class YOLOv3Predict:
 
     def predict(self,image):
         image_data = self.preprocess(image)
-        image_size = np.array([image.size[1], image.size[0]], dtype=np.float32).reshape(1, 2)
+        image_size = np.array([image.size[1], image.size[0]], dtype=np.int32).reshape(1, 2)
         input_names = session.get_inputs()
         feed_dict = {input_names[0].name: image_data, input_names[1].name: image_size}
         boxes, scores, indices = session.run([], input_feed=feed_dict)

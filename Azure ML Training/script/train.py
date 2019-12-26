@@ -99,7 +99,7 @@ def _main(model_path, fine_tune_epochs, unfrozen_epochs, learning_rate):
         model.compile(optimizer=Adam(lr=learning_rate), loss={'yolo_loss': lambda y_true, y_pred: y_pred}) # recompile to apply the change
         print('Unfreeze all of the layers.')
 
-        batch_size = 32 # note that more GPU memory is required after unfreezing the body
+        batch_size = 2 # note that more GPU memory is required after unfreezing the body
         print('Train on {} samples, val on {} samples, with batch size {}.'.format(num_train, num_val, batch_size))
         model.fit_generator(data_generator_wrapper(lines[:num_train], batch_size, input_shape, anchors, num_classes),
             steps_per_epoch=max(1, num_train//batch_size),
@@ -218,7 +218,7 @@ if __name__ == '__main__':
     parser.add_argument('--model', type=str, help='Folder path for model files')
     parser.add_argument('--chkpoint_folder', type=str, default='./logs', help='Folder path for checkpoint files')
     parser.add_argument('--fine_tune_epochs', type=int, default=50, help='Number of epochs for fine-tuning')
-    parser.add_argument('--unfrozen_epochs', type=int, default=60, help='Final epoch for training')
+    parser.add_argument('--unfrozen_epochs', type=int, default=55, help='Final epoch for training')
     parser.add_argument('--learning_rate', type=float, default=1e-4, help='Learning rate')
     FLAGS, unparsed = parser.parse_known_args()
 
